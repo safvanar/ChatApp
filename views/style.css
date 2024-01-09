@@ -1,0 +1,6 @@
+/* Custom CSS to center the modals */
+.modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
