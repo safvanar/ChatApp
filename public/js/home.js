@@ -24,6 +24,7 @@ async function on_Signup(e) {
                     phone: signupElements.phoneNo.value,
                     password: signupElements.password1.value
                 }
+                console.log(data)
                const response = await axios.post("/user/signup", data);
                console.log(response)
                if(response.data.success){

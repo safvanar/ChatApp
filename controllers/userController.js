@@ -6,7 +6,7 @@ const { Op } = require('sequelize')
 exports.postSignUp = async (req, res, next) => {
     try{
         let {name, email, phone, password} = req.body
-        let userExist = User.findOne({where: {[Op.or]: [ {email: email}, {phone: phone} ]}})
+        let userExist = await User.findOne({where: {[Op.or]: [ {email: email}, {phone: phone} ]}})
         if(!userExist){
             password = bcrypt.hashSync(password, 10)
             await User.create({name, email, phone, password})

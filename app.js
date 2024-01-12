@@ -30,7 +30,10 @@ app.use(bodyParser.json({ extended: false }));
 
 app.use(express.urlencoded({ extended: false }))
 
-app.use(cors());
+app.use(cors({
+    origin: '*',
+    methods:['GET','POST'],
+  }));
 
 app.use('/user', userRoutes)
 
