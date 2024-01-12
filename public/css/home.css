@@ -1,0 +1,5 @@
+.background-image-container {
+    background-image: url('/images/form-bg.jpg');
+    background-size: cover;  
+    background-repeat: no-repeat;
+}
