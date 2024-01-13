@@ -52,6 +52,46 @@ async function on_Signup(e) {
     }
 }
 
+const signinElements =  {
+    username: signin_form.querySelector('input[name = "Email"]'),
+    password: signin_form.querySelector('input[name = "Password"]'),
+    signin_btn: signin_form.querySelector('input[type = "submit"]'),
+    alert1: signin_form.querySelector('#alert1'),
+    alert2: signin_form.querySelector('#alert2'),
+    alert3: signin_form.querySelector('#alert3')
+}
+
+signinElements.signin_btn.addEventListener('click', on_Signin)
+
+async function on_Signin(e){
+    try{
+        if(signin_form.checkValidity()){
+            e.preventDefault()
+            const data = {
+                username: signinElements.username.value,
+                password: signinElements.password.value
+            }
+            const response = axios.post('/user/signin', data)
+            if(response.data.success){
+                signin_form.reset();
+                alertFunction(signinElements.alert3);
+                setTimeout(() => {
+                    window.location.href = '/user/home';
+                }, 3000)
+            }
+        }
+    }catch(err){
+        if(err.response && err.response.status === 401){
+            alertFunction(SigninElements.alert2)
+        }else if(error.response && error.response.status === 409){
+            alertFunction(signinElements.alert1)
+        }else{
+            alert("Something went wrong - Sign in again");
+            console.log(error);
+        }
+    }
+}
+
 const alertFunction = function(div){
     div.classList.remove('d-none');
     div.classList.add('d-block');
