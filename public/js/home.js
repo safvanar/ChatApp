@@ -71,8 +71,8 @@ async function on_Signin(e){
                 username: signinElements.username.value,
                 password: signinElements.password.value
             }
-            const response = axios.post('/user/signin', data)
-            if(response.data.success){
+            const response = await axios.post('/user/signin', data)
+            if(response.status === 200){
                 signin_form.reset();
                 alertFunction(signinElements.alert3);
                 setTimeout(() => {
@@ -82,8 +82,8 @@ async function on_Signin(e){
         }
     }catch(err){
         if(err.response && err.response.status === 401){
-            alertFunction(SigninElements.alert2)
-        }else if(error.response && error.response.status === 409){
+            alertFunction(signinElements.alert2)
+        }else if(err.response && err.response.status === 404){
             alertFunction(signinElements.alert1)
         }else{
             alert("Something went wrong - Sign in again");

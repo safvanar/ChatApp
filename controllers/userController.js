@@ -3,6 +3,10 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const { Op } = require('sequelize')
 
+function generateAccessToken(id){
+    return jwt.sign({userId: id}, 'secret-key')
+}
+
 exports.postSignUp = async (req, res, next) => {
     try{
         let {name, email, phone, password} = req.body
@@ -16,5 +20,25 @@ exports.postSignUp = async (req, res, next) => {
         }
     }catch(err){
         return res.status(400).json({message: 'user signup failed!', success: false})
+    }
+}
+
+exports.postSignin = async (req, res, next) => {
+    try{
+        let {username, password} = req.body
+        const user = await User.findOne({where: {email: username}})
+        if(user){
+            if(bcrypt.compareSync(password, user.password)){
+                const token = generateAccessToken(user.id) //jwt.sign({userId: user.id, isPremiumUser: user.isPremiumUser}, 'secret-key')
+                res.status(200).json({login: 'success', token: token})
+            }else{
+                throw new Error('Authentication failure')
+            }  
+        }
+        else{
+            return res.status(404).json({message: "user doesn't exist"})
+        }
+    }catch(err){
+        return res.status(401).json({message: 'user signin failed!', success: false})
     }
 }
