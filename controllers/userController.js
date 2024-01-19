@@ -30,7 +30,7 @@ exports.postSignin = async (req, res, next) => {
         if(user){
             if(bcrypt.compareSync(password, user.password)){
                 const token = generateAccessToken(user.id) //jwt.sign({userId: user.id, isPremiumUser: user.isPremiumUser}, 'secret-key')
-                res.status(200).json({login: 'success', token: token})
+                return res.status(200).json({login: 'success', token: token})
             }else{
                 throw new Error('Authentication failure')
             }  
@@ -40,5 +40,15 @@ exports.postSignin = async (req, res, next) => {
         }
     }catch(err){
         return res.status(401).json({message: 'user signin failed!', success: false})
+    }
+}
+
+exports.getUser = async (req, res, next) => {
+    try{
+        const userId = req.params.userId
+        const user = await User.findByPk(userId)
+        return res.status(200).json({status: 'success', name: user.name})
+    }catch(err){
+        return res.status(400).json({status:'failes'})
     }
 }
