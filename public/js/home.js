@@ -74,9 +74,10 @@ async function on_Signin(e){
             const response = await axios.post('/user/signin', data)
             if(response.status === 200){
                 signin_form.reset();
+                localStorage.setItem('token', response.data.token)
                 alertFunction(signinElements.alert3);
                 setTimeout(() => {
-                    window.location.href = '/user/home';
+                    window.location.href = '/chat';
                 }, 3000)
             }
         }
