@@ -53,7 +53,7 @@ app.use((req, res, next) => {
 
 const PORT = process.env.PORT
 
-// let socketsConnected = new Set()
+let socketsConnected = new Set()
 
 async function initiate(){
     await sequelize.sync()
@@ -61,25 +61,25 @@ async function initiate(){
         console.log(`Server running on port ${PORT}...`)
     })
 
-    // const io = require('socket.io')(server)
-    // io.on('connection', onConnected)
+    const io = require('socket.io')(server)
+    io.on('connection', onConnected)
 
-    // function onConnected(socket){
-    //     console.log(socket.id)
-    //     socketsConnected.add(socket.id)
-    //     io.emit('clients-total', socketsConnected.size)
+    function onConnected(socket){
+        console.log(socket.id)
+        socketsConnected.add(socket.id)
+        io.emit('clients-total', socketsConnected.size)
 
-    //     socket.on('disconnect', () => {
-    //         console.log('socket disconnected: ', socket.id)
-    //         socketsConnected.delete(socket.id)
-    //         io.emit('clients-total', socketsConnected.size)
-    //     })
+        socket.on('disconnect', () => {
+            console.log('socket disconnected: ', socket.id)
+            socketsConnected.delete(socket.id)
+            io.emit('clients-total', socketsConnected.size)
+        })
 
-    //     socket.on('message', (data) => {
-    //         console.log(data)
-    //         socket.broadcast.emit('chat-message', data)
-    //     })
-    // }
+        socket.on('message', (data) => {
+            console.log(data)
+            socket.broadcast.emit('chat-message', data)
+        })
+    }
 }
 
 initiate()
