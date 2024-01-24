@@ -10,8 +10,7 @@ const express = require('express');
 const compression = require('compression');
 const cors = require('cors');
 const morgan = require('morgan');
-
-
+const jwt = require('jsonwebtoken');
 
 // const sequelize = require('./utils/database')
 
@@ -75,8 +74,10 @@ async function initiate(){
             io.emit('clients-total', socketsConnected.size)
         })
 
-        socket.on('message', (data) => {
-            console.log(data)
+        socket.on('message', async (data) => {
+            const uid = jwt.verify(data.token, 'secret-key' )
+            const user = await User.findByPk(uid.userId)
+            data.name = user.name
             socket.broadcast.emit('chat-message', data)
         })
     }

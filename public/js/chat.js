@@ -73,16 +73,13 @@ socket.on('chat-message', (data) => {
 })
 
 async function addMessageToUI(isOwnMessage, data){
-    const response =  axios.get(`user/${data.userId}`)
-    // const senderInfo = response.data.name
-    const element = `
+        const element = `
                     <li class="${isOwnMessage ? "message-right" : "message-left"}">
                         <p class="message">
                             ${data.message}
-                            <span>someone • ${moment(data.dateTime).fromNow()}</span>
+                            <span>${isOwnMessage ? 'You' : data.name} • ${moment(data.dateTime).fromNow()}</span>
                         </p>
                     </li>`
-
     messageContainer.innerHTML += element
     scrollToBottom()
 }
